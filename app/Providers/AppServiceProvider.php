@@ -12,7 +12,7 @@ class AppServiceProvider extends ServiceProvider
     public function register(): void
     {
         $this->app->bind('path.public', function () {
-            return base_path('../public_html/attandance');
+            return '/home/u912812505/public_html/attandance';
         });
     }
 
