@@ -1,201 +1,187 @@
 <x-app-layout>
-    <div class="min-h-screen bg-gradient-to-br from-sky-50 via-white to-indigo-100 p-4 lg:p-8">
+    <div class="min-h-screen bg-[radial-gradient(circle_at_top_left,#dff7ff,transparent_35%),linear-gradient(135deg,#f8fafc,#eef9ff,#ecfeff)] p-4 lg:p-8">
         <div class="max-w-7xl mx-auto">
+
             @if (session('success'))
-                <div class="mb-6 rounded-2xl bg-green-100 text-green-700 px-5 py-4 font-bold shadow">
+                <div class="mb-6 rounded-3xl bg-emerald-50 border border-emerald-200 text-emerald-700 px-6 py-4 font-black shadow-xl">
                     ✅ {{ session('success') }}
                 </div>
             @endif
-            <div class="employee-hero rounded-[2rem] bg-white/80 backdrop-blur-2xl shadow-2xl border border-white p-6 lg:p-8 mb-8">
-                <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-5">
+
+            <div class="relative overflow-hidden rounded-[2.5rem] bg-white/80 backdrop-blur-2xl border border-white shadow-2xl p-6 lg:p-10 mb-8">
+                <div class="absolute -top-24 -right-24 w-80 h-80 bg-cyan-200/70 rounded-full blur-3xl"></div>
+                <div class="absolute -bottom-28 -left-28 w-96 h-96 bg-blue-200/70 rounded-full blur-3xl"></div>
+
+                <div class="relative z-10 flex flex-col lg:flex-row lg:items-center lg:justify-between gap-8">
                     <div>
-                        <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-blue-50 text-blue-600 font-bold text-sm mb-4">
-                            👥 Manajemen Karyawan
+                        <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-cyan-50 text-cyan-600 border border-cyan-100 font-black text-sm mb-5 shadow-sm">
+                            👥 Premium Employee Management
                         </div>
 
-                        <h1 class="text-3xl lg:text-5xl font-black text-slate-800">
+                        <h1 class="text-4xl lg:text-6xl font-black text-slate-950 tracking-tight">
                             Data Karyawan
                         </h1>
 
-                        <p class="text-slate-500 mt-3">
-                            Kelola data karyawan, jabatan, divisi, dan status akun.
+                        <p class="text-slate-500 mt-4 max-w-2xl font-semibold">
+                            Kelola data karyawan, divisi, shift, status akun, dan registrasi wajah secara realtime.
                         </p>
                     </div>
 
                     <a href="{{ route('employees.create') }}"
-                       class="inline-flex items-center justify-center gap-2 px-6 py-4 rounded-2xl bg-gradient-to-r from-blue-600 to-cyan-400 text-white font-bold shadow-xl hover:scale-105 transition">
-                        ➕ Tambah Karyawan
+                       class="inline-flex items-center justify-center gap-3 px-7 py-4 rounded-3xl bg-gradient-to-r from-blue-600 to-cyan-400 text-white font-black shadow-2xl shadow-cyan-300/40 hover:scale-105 transition">
+                        <span class="text-xl">＋</span>
+                        Tambah Karyawan
                     </a>
                 </div>
             </div>
 
-            <div class="employee-table rounded-[2rem] bg-white/90 backdrop-blur-2xl shadow-xl border border-white overflow-hidden">
-                <div class="p-5 border-b border-slate-100 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-                    <div>
-                        <h2 class="font-black text-xl text-slate-800">Daftar Karyawan</h2>
-                        <p class="text-sm text-slate-400">Semua data karyawan terdaftar.</p>
-                    </div>
-
-                    <div class="relative">
-                        <input type="text"
-                               placeholder="Cari karyawan..."
-                               class="w-full md:w-72 rounded-2xl border-slate-200 focus:border-blue-400 focus:ring-blue-400">
-                    </div>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-5 mb-8">
+                <div class="rounded-[2rem] bg-white/85 backdrop-blur-xl border border-white shadow-xl p-6">
+                    <p class="text-slate-400 font-black text-sm uppercase tracking-widest">Total Karyawan</p>
+                    <h3 class="text-4xl font-black text-slate-950 mt-3">{{ $employees->total() }}</h3>
                 </div>
 
-                <div class="overflow-x-auto">
-                    <table class="w-full">
-                        <thead class="bg-slate-50 text-slate-500 text-sm">
-                            <tr>
-                                <th class="px-6 py-4 text-left">Karyawan</th>
-                                <th class="px-6 py-4 text-left">Kode</th>
-                                <th class="px-6 py-4 text-left">Divisi</th>
-                                <th class="px-6 py-4 text-left">Shift</th>
-                                <th class="px-6 py-4 text-left">Jabatan</th>
-                                <th class="px-6 py-4 text-left">Status</th>
-                                <th class="px-6 py-4 text-right">Aksi</th>
-                            </tr>
-                        </thead>
-
-                        <tbody class="divide-y divide-slate-100">
-                            @forelse ($employees as $employee)
-                                <tr class="hover:bg-blue-50/50 transition">
-                                    <td class="px-6 py-4">
-                                        <div class="flex items-center gap-3">
-                                        <img src="{{ $employee->photo && file_exists(public_path($employee->photo)) 
-                                                ? asset($employee->photo) 
-                                                : 'https://ui-avatars.com/api/?name='.urlencode($employee->name).'&background=0ea5e9&color=fff' }}"
-                                            class="w-12 h-12 rounded-2xl object-cover shadow-lg border-2 border-white">
-                                            <div>
-                                                <p class="font-bold text-slate-800">{{ $employee->name }}</p>
-                                                <p class="text-sm text-slate-400">{{ $employee->email ?? '-' }}</p>
-                                            </div>
-                                        </div>
-                                    </td>
-
-                                    <td class="px-6 py-4 font-semibold text-slate-600">
-                                        {{ $employee->employee_code }}
-                                    </td>
-
-                                    <td class="px-6 py-4 text-slate-500">
-                                        {{ $employee->department ?? '-' }}
-                                    </td>
-                                    <td class="px-6 py-4 text-slate-500">
-                                        {{ $employee->workShift?->name ?? '-' }}
-                                    </td>
-                                    <td class="px-6 py-4 text-slate-500">
-                                        {{ $employee->position ?? '-' }}
-                                    </td>
-
-                                    <td class="px-6 py-4">
-                                        @if ($employee->status === 'active')
-                                            <span class="px-3 py-1 rounded-full bg-green-100 text-green-600 text-xs font-bold">
-                                                Aktif
-                                            </span>
-                                        @else
-                                            <span class="px-3 py-1 rounded-full bg-red-100 text-red-600 text-xs font-bold">
-                                                Nonaktif
-                                            </span>
-                                        @endif
-                                    </td>
-
-                                        <td class="px-6 py-4 text-right">
-
-                                            <div class="flex items-center justify-end gap-2">
-
-                                                {{-- DETAIL --}}
-                                                <a href="{{ route('employees.show', $employee) }}"
-                                                class="group inline-flex items-center gap-2 px-4 py-2 rounded-2xl bg-cyan-50 text-cyan-600 font-bold hover:bg-cyan-100 transition shadow-sm">
-
-                                                    <svg class="w-5 h-5 group-hover:scale-110 transition"
-                                                        fill="none"
-                                                        stroke="currentColor"
-                                                        stroke-width="2.4"
-                                                        viewBox="0 0 24 24">
-
-                                                        <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8S1 12 1 12z"/>
-                                                        <circle cx="12" cy="12" r="3"/>
-
-                                                    </svg>
-
-                                                    Detail
-
-                                                </a>
-
-                                                {{-- EDIT --}}
-                                                <a href="{{ route('employees.edit', $employee) }}"
-                                                class="group inline-flex items-center gap-2 px-4 py-2 rounded-2xl bg-blue-50 text-blue-600 font-bold hover:bg-blue-100 transition shadow-sm">
-
-                                                    <svg class="w-5 h-5 group-hover:rotate-12 transition"
-                                                        fill="none"
-                                                        stroke="currentColor"
-                                                        stroke-width="2.4"
-                                                        viewBox="0 0 24 24">
-
-                                                        <path d="M12 20h9"/>
-                                                        <path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z"/>
-
-                                                    </svg>
-
-                                                    Edit
-
-                                                </a>
-
-                                                {{-- DELETE --}}
-                                                <form action="{{ route('employees.destroy', $employee) }}"
-                                                    method="POST"
-                                                    onsubmit="return confirm('Yakin ingin menghapus karyawan ini?')">
-
-                                                    @csrf
-                                                    @method('DELETE')
-
-                                                    <button type="submit"
-                                                            class="group inline-flex items-center gap-2 px-4 py-2 rounded-2xl bg-red-50 text-red-600 font-bold hover:bg-red-100 transition shadow-sm">
-
-                                                        <svg class="w-5 h-5 group-hover:scale-110 transition"
-                                                            fill="none"
-                                                            stroke="currentColor"
-                                                            stroke-width="2.4"
-                                                            viewBox="0 0 24 24">
-
-                                                            <path d="M3 6h18"/>
-                                                            <path d="M8 6V4h8v2"/>
-                                                            <path d="M19 6l-1 14H6L5 6"/>
-
-                                                        </svg>
-
-                                                        Hapus
-
-                                                    </button>
-
-                                                </form>
-                                                <a href="{{ route('employees.face-register', $employee) }}"
-                                                    class="inline-flex items-center gap-2 px-4 py-2 rounded-2xl bg-purple-50 text-purple-600 font-bold hover:bg-purple-100 transition shadow-sm">
-                                                            Scan Wajah
-    </a>
-
-                                            </div>
-
-                                        </td>
-                                </tr>
-                            @empty
-                                <tr>
-                                    <td colspan="6" class="px-6 py-16 text-center">
-                                        <div class="text-5xl mb-4">👤</div>
-                                        <h3 class="font-black text-xl text-slate-700">Belum ada karyawan</h3>
-                                        <p class="text-slate-400 mt-2">Tambahkan karyawan pertama kamu.</p>
-                                    </td>
-                                </tr>
-                            @endforelse
-                        </tbody>
-                    </table>
+                <div class="rounded-[2rem] bg-white/85 backdrop-blur-xl border border-white shadow-xl p-6">
+                    <p class="text-slate-400 font-black text-sm uppercase tracking-widest">Filter Realtime</p>
+                    <h3 class="text-4xl font-black text-blue-600 mt-3">Aktif</h3>
                 </div>
 
-                <div class="p-5">
-                    {{ $employees->links() }}
+                <div class="rounded-[2rem] bg-white/85 backdrop-blur-xl border border-white shadow-xl p-6">
+                    <p class="text-slate-400 font-black text-sm uppercase tracking-widest">Face Scan</p>
+                    <h3 class="text-4xl font-black text-cyan-600 mt-3">Ready</h3>
                 </div>
             </div>
 
+            <div class="rounded-[2.5rem] bg-white/90 backdrop-blur-2xl border border-white shadow-2xl overflow-hidden">
+                <div class="p-6 lg:p-8 border-b border-slate-100">
+                    <div class="flex flex-col xl:flex-row xl:items-end xl:justify-between gap-6">
+                        <div>
+                            <h2 class="text-2xl lg:text-3xl font-black text-slate-950">
+                                Daftar Karyawan
+                            </h2>
+                            <p class="text-slate-400 font-semibold mt-1">
+                                Cari dan filter data tanpa reload halaman.
+                            </p>
+                        </div>
+
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 w-full xl:max-w-4xl">
+                            <div>
+                                <label class="text-xs font-black text-slate-400 uppercase tracking-widest">
+                                    Pencarian
+                                </label>
+                                <input type="text"
+                                       id="searchInput"
+                                       placeholder="Nama, kode, email..."
+                                       class="mt-2 w-full rounded-3xl border-slate-200 bg-slate-50 px-5 py-4 font-bold text-slate-700 shadow-inner focus:border-cyan-400 focus:ring-cyan-400">
+                            </div>
+
+                            <div>
+                                <label class="text-xs font-black text-slate-400 uppercase tracking-widest">
+                                    Status
+                                </label>
+                                <select id="statusFilter"
+                                        class="mt-2 w-full rounded-3xl border-slate-200 bg-slate-50 px-5 py-4 font-bold text-slate-700 shadow-inner focus:border-cyan-400 focus:ring-cyan-400">
+                                    <option value="">Semua Status</option>
+                                    <option value="active">Aktif</option>
+                                    <option value="inactive">Nonaktif</option>
+                                </select>
+                            </div>
+
+                            <div>
+                                <label class="text-xs font-black text-slate-400 uppercase tracking-widest">
+                                    Departemen
+                                </label>
+                                <select id="departmentFilter"
+                                        class="mt-2 w-full rounded-3xl border-slate-200 bg-slate-50 px-5 py-4 font-bold text-slate-700 shadow-inner focus:border-cyan-400 focus:ring-cyan-400">
+                                    <option value="">Semua Departemen</option>
+                                    @foreach ($departments as $department)
+                                        <option value="{{ $department }}">{{ $department }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="employeeTable">
+                    @include('employees.partials.table', ['employees' => $employees])
+                </div>
+            </div>
         </div>
     </div>
+<script>
+    const searchInput = document.getElementById('searchInput');
+    const statusFilter = document.getElementById('statusFilter');
+    const departmentFilter = document.getElementById('departmentFilter');
+    const employeeTable = document.getElementById('employeeTable');
+
+    let typingTimer = null;
+
+    function fetchEmployees(pageUrl = null) {
+        let url = pageUrl || "{{ route('employees.index') }}";
+
+        const params = new URLSearchParams({
+            search: searchInput.value,
+            status: statusFilter.value,
+            department: departmentFilter.value
+        });
+
+        if (pageUrl) {
+            url = pageUrl.split('?')[0];
+        }
+
+        employeeTable.innerHTML = `
+            <div class="p-12 text-center">
+                <div class="inline-flex items-center gap-3 px-6 py-4 rounded-3xl bg-blue-50 text-blue-600 font-black shadow">
+                    <span class="animate-spin">⏳</span>
+                    Memuat data...
+                </div>
+            </div>
+        `;
+
+        fetch(url + '?' + params.toString(), {
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest'
+            }
+        })
+        .then(response => response.text())
+        .then(html => {
+            employeeTable.innerHTML = html;
+        })
+        .catch(error => {
+            console.error(error);
+
+            employeeTable.innerHTML = `
+                <div class="p-12 text-center text-red-600 font-black">
+                    Gagal memuat data karyawan.
+                </div>
+            `;
+        });
+    }
+
+    searchInput.addEventListener('keyup', function () {
+        clearTimeout(typingTimer);
+
+        typingTimer = setTimeout(function () {
+            fetchEmployees();
+        }, 300);
+    });
+
+    statusFilter.addEventListener('change', function () {
+        fetchEmployees();
+    });
+
+    departmentFilter.addEventListener('change', function () {
+        fetchEmployees();
+    });
+
+    document.addEventListener('click', function (event) {
+        const link = event.target.closest('#employeeTable .pagination a');
+
+        if (link) {
+            event.preventDefault();
+            fetchEmployees(link.href);
+        }
+    });
+</script>
 </x-app-layout>

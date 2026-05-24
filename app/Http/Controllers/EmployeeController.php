@@ -9,11 +9,45 @@ use Illuminate\Support\Str;
 
 class EmployeeController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $employees = Employee::latest()->paginate(10);
+        $query = Employee::query()->with('workShift');
 
-        return view('employees.index', compact('employees'));
+        if ($request->filled('search')) {
+            $search = $request->search;
+
+            $query->where(function ($q) use ($search) {
+                $q->where('employee_code', 'like', "%{$search}%")
+                    ->orWhere('name', 'like', "%{$search}%")
+                    ->orWhere('email', 'like', "%{$search}%")
+                    ->orWhere('phone', 'like', "%{$search}%")
+                    ->orWhere('position', 'like', "%{$search}%")
+                    ->orWhere('department', 'like', "%{$search}%");
+            });
+        }
+
+        if ($request->filled('status')) {
+            $query->where('status', $request->status);
+        }
+
+        if ($request->filled('department')) {
+            $query->where('department', $request->department);
+        }
+
+        $employees = $query->latest()->paginate(10);
+
+        $departments = Employee::whereNotNull('department')
+            ->where('department', '!=', '')
+            ->select('department')
+            ->distinct()
+            ->orderBy('department')
+            ->pluck('department');
+
+        if ($request->ajax()) {
+            return view('employees.partials.table', compact('employees'))->render();
+        }
+
+        return view('employees.index', compact('employees', 'departments'));
     }
 
     public function create()
